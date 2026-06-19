@@ -13,7 +13,8 @@ Bản mockup tĩnh (HTML thuần) cho **Trung tâm Thông tin Nội bộ** của
 
 ## Cách xem
 
-- **Online:** mở link GitHub Pages (sẽ cập nhật sau khi bật Pages).
+- **Trang Hub:** https://minhnh87.github.io/mydemo/
+- **Trang CMS:** https://minhnh87.github.io/mydemo/cms.html
 - **Local:** tải repo về và mở `index.html` bằng trình duyệt (không cần cài đặt gì).
 
 ## Trạng thái
