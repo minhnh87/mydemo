@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TVS · Trung tâm Thông tin Nội bộ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --tvs-blue: #124E91;
+    --tvs-blue-dark: #03336A;
+    --tvs-blue-light: #1A66B8;
+    --bg: #f4f6f9;
+    --card-border: #EDEFF2;
+    --ink: #1F2937;
+    --muted: #6B7280;
+    --faint: #9CA3AF;
+    --red: #DC3545;
+    --green: #0C7B09;
+    --orange: #EA8C00;
+    --violet: #6D28D9;
+    --radius: 16px;
+    --shadow: 0 4px 14px rgba(18,78,145,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; }
+  body {
+    font-family: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: #c8d2dd; border-radius: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+
+  /* ---------- App top bar (mô phỏng header SMART) ---------- */
+  .appbar {
+    height: 60px; background: #fff; border-bottom: 1px solid #eef1f4;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; position: sticky; top: 0; z-index: 40;
+  }
+  .appbar .brand { display: flex; align-items: center; gap: 12px; }
+  .logo-badge {
+    width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--tvs-blue-dark), var(--tvs-blue-light));
+    color: #fff; font-weight: 800; font-size: 15px; letter-spacing: .5px;
+  }
+  .appbar .title { font-size: 26px; font-weight: 700; color: var(--tvs-blue); }
+  .appbar .right { display: flex; align-items: center; gap: 16px; }
+  .icon-btn {
+    width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+    background: #f3f5f8; color: #475569; display: grid; place-items: center; position: relative;
+    font-size: 16px;
+  }
+  .icon-btn .dot { position: absolute; top: 8px; right: 9px; width: 8px; height: 8px;
+    background: var(--red); border-radius: 50%; border: 2px solid #fff; }
+  .avatar-pill { display: flex; align-items: center; gap: 9px; }
+  .avatar {
+    width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+    background: #EAF1FA; color: var(--tvs-blue); font-weight: 800; font-size: 13px;
+  }
+  .avatar-pill .nm { font-weight: 700; font-size: 13px; line-height: 1.1; }
+  .avatar-pill .rl { font-size: 11px; color: var(--faint); }
+
+  /* ---------- Hub gradient band ---------- */
+  .hub-band {
+    background: linear-gradient(120deg, var(--tvs-blue-dark) 0%, var(--tvs-blue) 55%, var(--tvs-blue-light) 100%);
+    color: #fff; padding: 22px 28px; border-radius: 0 0 18px 18px;
+    box-shadow: 0 6px 20px rgba(18,78,145,0.25);
+  }
+  .hub-band .inner {
+    max-width: 1400px; margin: 0 auto; display: flex; align-items: center;
+    justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  }
+  .hub-band .lead { display: flex; align-items: center; gap: 14px; }
+  .hub-ico {
+    width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center;
+    background: rgba(255,255,255,.15); font-size: 24px;
+  }
+  .hub-band h1 { font-size: 25px; font-weight: 800; line-height: 1.15; }
+  .hub-band .sub { font-size: 13px; opacity: .88; margin-top: 2px; }
+  .hub-tools { display: flex; align-items: center; gap: 18px; }
+  .search-box {
+    display: flex; align-items: center; gap: 9px; background: rgba(255,255,255,.16);
+    height: 42px; border-radius: 999px; padding: 0 16px; min-width: 280px;
+  }
+  .search-box input {
+    background: transparent; border: none; outline: none; color: #fff; font-size: 14px;
+    width: 100%; font-family: inherit;
+  }
+  .search-box input::placeholder { color: rgba(255,255,255,.7); }
+  .clock { text-align: right; min-width: 150px; }
+  .clock .t { font-size: 23px; font-weight: 700; line-height: 1; }
+  .clock .d { font-size: 12px; opacity: .85; margin-top: 3px; }
+
+  /* ---------- Layout ---------- */
+  main { max-width: 1400px; margin: 0 auto; padding: 22px; }
+  .urgent-wrap { margin-bottom: 14px; }
+  .grid {
+    display: grid; grid-template-columns: 2fr 1fr; gap: 18px; align-items: start;
+  }
+  .col { display: flex; flex-direction: column; gap: 18px; }
+
+  /* ---------- Cards ---------- */
+  .card { background: #fff; border: 1px solid var(--card-border); border-radius: var(--radius); }
+  .card-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 13px 18px; border-bottom: 1px solid #f1f3f5;
+  }
+  .card-head .ttl { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 15px; }
+  .head-ico { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; font-size: 14px; }
+
+  /* ---------- Urgent banner ---------- */
+  .urgent {
+    display: flex; align-items: flex-start; gap: 12px; background: #FDECEC;
+    border: 1px solid #F5C2C2; border-left: 4px solid var(--red);
+    border-radius: 12px; padding: 13px 16px; margin-bottom: 12px;
+  }
+  .urgent .u-ico { width: 34px; height: 34px; border-radius: 9px; background: var(--red); color: #fff;
+    display: grid; place-items: center; flex: none; font-size: 15px; }
+  .urgent .u-title { font-weight: 700; color: #B02A37; font-size: 14.5px; }
+  .urgent .u-time { font-size: 11px; color: #B02A37; opacity: .7; margin-left: 8px; }
+  .urgent .u-detail { font-size: 13px; color: #7A1F27; margin-top: 2px; }
+  .urgent .u-x { background: none; border: none; color: #B02A37; cursor: pointer; font-size: 18px;
+    line-height: 1; padding: 2px 6px; }
+
+  /* ---------- Leadership spotlight ---------- */
+  .spotlight {
+    border-radius: 18px; padding: 26px; color: #fff; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, #0B2E5C 0%, var(--tvs-blue) 60%, #2A6FC0 100%);
+    box-shadow: 0 8px 24px rgba(11,46,92,0.28);
+  }
+  .spotlight .quote { position: absolute; right: -6px; top: -22px; font-size: 150px; opacity: .10;
+    font-family: Georgia, serif; }
+  .badge-soft { background: rgba(255,255,255,.18); padding: 4px 11px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; letter-spacing: .5px; }
+  .spotlight h2 { font-size: 22px; font-weight: 800; margin: 12px 0 10px; line-height: 1.3; position: relative; }
+  .spotlight p { font-size: 14px; opacity: .92; line-height: 1.6; position: relative; }
+  .spotlight .foot { display: flex; align-items: center; justify-content: space-between;
+    margin-top: 18px; position: relative; flex-wrap: wrap; gap: 10px; }
+  .spotlight .who { display: flex; align-items: center; gap: 11px; }
+  .spotlight .who .avatar { background: #fff; color: var(--tvs-blue); width: 42px; height: 42px; }
+  .btn-light {
+    background: #fff; color: var(--tvs-blue); border: none; border-radius: 10px; cursor: pointer;
+    font-weight: 700; font-family: inherit; font-size: 13px; padding: 9px 16px;
+  }
+  .btn-light:hover { background: #EAF1FA; }
+
+  /* ---------- News feed ---------- */
+  .feed { padding: 16px; }
+  .feed > .ttl { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 17px; margin-bottom: 10px; padding: 0 4px; }
+  .tabs { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 14px; padding: 0 4px; }
+  .tab {
+    border: none; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 12.5px;
+    padding: 6px 13px; border-radius: 999px; background: #F3F4F6; color: #4B5563;
+  }
+  .tab:hover { background: #E5E7EB; }
+  .tab.active { background: var(--tvs-blue); color: #fff; }
+
+  .news-list { display: flex; flex-direction: column; gap: 9px; }
+  .news {
+    display: flex; gap: 13px; padding: 14px; border: 1px solid var(--card-border);
+    border-radius: 12px; cursor: pointer; transition: all .18s ease; background: #fff;
+  }
+  .news:hover { border-color: #C7D8EE; box-shadow: 0 4px 14px rgba(18,78,145,.10); transform: translateY(-1px); }
+  .news .thumb { width: 46px; height: 46px; border-radius: 11px; display: grid; place-items: center;
+    font-size: 22px; flex: none; }
+  .news .body { flex: 1; min-width: 0; }
+  .chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
+  .chip { height: 20px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 6px;
+    font-size: 11px; font-weight: 700; }
+  .chip-new { background: var(--red); color: #fff; font-size: 10.5px; font-weight: 800; }
+  .chip-ack { background: #fff; color: var(--orange); border: 1px solid var(--orange); font-size: 10.5px; }
+  .pin { color: var(--red); font-size: 12px; }
+  .news h3 { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.35; }
+  .news:hover h3 { color: var(--tvs-blue); }
+  .news .summ { font-size: 13px; color: var(--muted); margin-top: 3px;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .news .meta { display: flex; align-items: center; gap: 11px; margin-top: 7px; flex-wrap: wrap; font-size: 11.5px; color: var(--faint); }
+  .news .meta .auth { font-weight: 600; }
+  .ack-btn {
+    margin-left: auto; border: none; background: none; cursor: pointer; font-family: inherit;
+    color: var(--tvs-blue); font-weight: 700; font-size: 11.5px; padding: 3px 6px; border-radius: 6px;
+  }
+  .ack-btn:hover { background: #EEF4FB; }
+  .ack-btn.done { color: var(--green); cursor: default; }
+  .empty { text-align: center; color: var(--faint); padding: 34px 0; font-size: 14px; }
+
+  /* ---------- Approvals ---------- */
+  .appr { display: flex; align-items: center; gap: 11px; padding: 13px 16px; border-bottom: 1px solid #f5f6f7; }
+  .appr:last-of-type { border-bottom: none; }
+  .appr.resolved { opacity: .55; }
+  .appr .a-body { flex: 1; min-width: 0; }
+  .appr .a-name { font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
+  .a-type { font-size: 11px; font-weight: 700; }
+  .appr .a-detail { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .appr .a-sub { font-size: 11px; color: var(--faint); display: flex; gap: 8px; align-items: center; }
+  .a-amount { font-size: 12px; font-weight: 700; color: var(--green); }
+  .a-actions { display: flex; gap: 6px; flex: none; }
+  .a-btn { width: 30px; height: 30px; border-radius: 8px; border: none; cursor: pointer; display: grid; place-items: center; }
+  .a-ok { background: #E7F5E7; color: var(--green); }
+  .a-ok:hover { background: var(--green); color: #fff; }
+  .a-no { background: #FDECEC; color: var(--red); }
+  .a-no:hover { background: var(--red); color: #fff; }
+  .a-status { height: 22px; display: inline-flex; align-items: center; padding: 0 9px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+  .count-badge { min-width: 26px; height: 22px; padding: 0 7px; border-radius: 999px; color: #fff;
+    background: var(--red); font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
+  .card-foot { text-align: center; padding: 11px; font-size: 12.5px; font-weight: 700; color: var(--tvs-blue); cursor: pointer; }
+  .card-foot:hover { background: #F7FAFD; border-radius: 0 0 var(--radius) var(--radius); }
+
+  /* ---------- Recruitment ---------- */
+  .job { padding: 13px 16px; border-bottom: 1px solid #f5f6f7; cursor: pointer; }
+  .job:hover { background: #FFFBF4; }
+  .job .j-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+  .job h4 { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .hot { background: #EA580C; color: #fff; font-size: 10.5px; font-weight: 800; padding: 2px 7px; border-radius: 6px; flex: none; }
+  .job .j-meta { display: flex; align-items: center; gap: 9px; margin-top: 5px; flex-wrap: wrap; font-size: 12px; color: var(--muted); }
+  .pill-soft { background: #F3F4F6; color: #4B5563; font-size: 11px; padding: 2px 8px; border-radius: 6px; }
+  .bonus { font-size: 12.5px; color: var(--green); font-weight: 700; margin-top: 6px; }
+  .btn-outline {
+    width: 100%; margin: 12px 0 2px; padding: 9px; border-radius: 10px; cursor: pointer; font-family: inherit;
+    font-weight: 700; font-size: 13px; background: #fff; color: var(--orange); border: 1px solid var(--orange);
+  }
+  .btn-outline:hover { background: #FFF7EC; }
+
+  /* ---------- Market ticker ---------- */
+  .ticker { background: #0E1B2E; border: 1px solid #1C2E47; border-radius: var(--radius); overflow: hidden; }
+  .ticker .t-head { display: flex; align-items: center; gap: 9px; padding: 12px 16px; border-bottom: 1px solid #1C2E47; color: #fff; font-weight: 800; font-size: 14.5px; }
+  .ticker .t-head .when { margin-left: auto; font-size: 11px; color: #7A8AA0; font-weight: 500; }
+  .t-grid { display: grid; grid-template-columns: 1fr 1fr; }
+  .t-cell { padding: 13px 16px; border-bottom: 1px solid #1C2E47; }
+  .t-cell:nth-child(odd) { border-right: 1px solid #1C2E47; }
+  .t-cell:nth-last-child(-n+2) { border-bottom: none; }
+  .t-sym { font-size: 12px; color: #9DAAC0; font-weight: 600; }
+  .t-val { font-size: 17px; font-weight: 800; color: #fff; line-height: 1.3; }
+  .t-chg { font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+  .up { color: #16C784; } .down { color: #EA3943; }
+
+  /* ---------- Quick links ---------- */
+  .ql-head { display: flex; align-items: center; gap: 9px; font-weight: 800; font-size: 15px; padding: 16px 16px 4px; }
+  .ql-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 10px 16px 16px; }
+  .ql {
+    padding: 13px; border: 1px solid var(--card-border); border-radius: 12px; cursor: pointer; transition: all .18s ease;
+  }
+  .ql:hover { border-color: #C7D8EE; background: #F7FAFD; }
+  .ql .ql-ico { width: 34px; height: 34px; border-radius: 9px; background: #E8F0FA; color: var(--tvs-blue);
+    display: grid; place-items: center; font-size: 16px; }
+  .ql .ql-name { font-weight: 700; font-size: 13px; margin-top: 9px; }
+  .ql .ql-desc { font-size: 11px; color: var(--faint); line-height: 1.3; }
+
+  .footer-note { max-width: 1400px; margin: 8px auto 30px; padding: 0 22px; color: var(--faint); font-size: 12px; text-align: center; }
+  .mock-tag { position: fixed; bottom: 14px; right: 14px; background: #111827; color: #fff; font-size: 11px;
+    padding: 6px 12px; border-radius: 999px; opacity: .8; z-index: 60; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 1024px) {
+    .grid { grid-template-columns: 1fr; }
+    .appbar .title { display: none; }
+  }
+  @media (max-width: 640px) {
+    .hub-tools { width: 100%; flex-direction: column-reverse; align-items: stretch; }
+    .search-box { min-width: 0; }
+    .clock { text-align: left; }
+    main { padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- App top bar (mô phỏng header SMART) -->
+  <div class="appbar">
+    <div class="brand">
+      <div class="logo-badge">TVS</div>
+      <span class="title">Information Hub</span>
+    </div>
+    <div class="right">
+      <a href="cms.html" style="text-decoration:none;background:#EAF1FA;color:#124E91;font-weight:700;font-size:12.5px;padding:9px 14px;border-radius:999px">⚙ Trang quản trị (CMS)</a>
+      <button class="icon-btn" title="Thông báo">🔔<span class="dot"></span></button>
+      <div class="avatar-pill">
+        <div class="avatar">MH</div>
+        <div>
+          <div class="nm">Minh Hoàng</div>
+          <div class="rl">Trưởng phòng</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hub gradient band -->
+  <div class="hub-band">
+    <div class="inner">
+      <div class="lead">
+        <div class="hub-ico">📢</div>
+        <div>
+          <h1>Trung tâm Thông tin Nội bộ</h1>
+          <div class="sub" id="greeting">Chào mừng 👋 · Cập nhật tức thời toàn công ty</div>
+        </div>
+      </div>
+      <div class="hub-tools">
+        <div class="search-box">
+          <span>🔍</span>
+          <input id="search" type="text" placeholder="Tìm thông báo, tin tức..." />
+        </div>
+        <div class="clock">
+          <div class="t" id="clock-time">--:--</div>
+          <div class="d" id="clock-date">&nbsp;</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="urgent-wrap" id="urgent-wrap"></div>
+
+    <div class="grid">
+      <!-- Cột chính -->
+      <div class="col">
+        <!-- Leadership spotlight -->
+        <div class="spotlight">
+          <div class="quote">&ldquo;</div>
+          <div style="display:flex;align-items:center;gap:10px;position:relative">
+            <span class="badge-soft">TỪ BAN LÃNH ĐẠO</span>
+            <span style="font-size:12px;opacity:.8">Hôm nay · 08:00</span>
+          </div>
+          <h2>Định hướng kinh doanh Quý III/2026</h2>
+          <p>Gửi toàn thể CBNV, kết quả 6 tháng đầu năm đã vượt 112% kế hoạch nhờ nỗ lực của tất cả các khối. Quý III, chúng ta tập trung vào ba ưu tiên: nâng cao trải nghiệm khách hàng số, mở rộng mảng tư vấn đầu tư và kiện toàn nền tảng dữ liệu SMART.</p>
+          <div class="foot">
+            <div class="who">
+              <div class="avatar">TGĐ</div>
+              <div>
+                <div style="font-weight:700;font-size:14px">Nguyễn Văn A</div>
+                <div style="font-size:12px;opacity:.82">Tổng Giám đốc TVS</div>
+              </div>
+            </div>
+            <button class="btn-light">Đọc toàn văn →</button>
+          </div>
+        </div>
+
+        <!-- News feed -->
+        <div class="card feed">
+          <div class="ttl">📰 Bảng tin công ty</div>
+          <div class="tabs" id="tabs"></div>
+          <div class="news-list" id="news-list"></div>
+        </div>
+      </div>
+
+      <!-- Cột phụ -->
+      <div class="col">
+        <!-- Pending approvals -->
+        <div class="card">
+          <div class="card-head">
+            <div class="ttl">
+              <span class="head-ico" style="background:#E8F0FA;color:var(--tvs-blue)">✅</span>
+              <div>
+                Yêu cầu chờ duyệt
+                <div style="font-size:11px;font-weight:500;color:var(--faint)">Dành cho cấp quản lý</div>
+              </div>
+            </div>
+            <span class="count-badge" id="appr-count">0</span>
+          </div>
+          <div id="appr-list"></div>
+          <div class="card-foot">Xem tất cả yêu cầu →</div>
+        </div>
+
+        <!-- Quick links -->
+        <div class="card">
+          <div class="ql-head">🔗 Liên kết nhanh</div>
+          <div class="ql-grid" id="links"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div class="footer-note">Bản mockup tĩnh · Dữ liệu minh hoạ · TVS SMART — Centralized Information Hub</div>
+  <div class="mock-tag">● MOCKUP · dummy data</div>
+
+<script>
+/* ===================== DỮ LIỆU MẪU ===================== */
+const CAT = {
+  company:     { label: "Thông báo công ty", color: "#124E91", bg: "#E8F0FA" },
+  leadership:  { label: "Ban Lãnh đạo",      color: "#6D28D9", bg: "#F1EBFB" },
+  market:      { label: "Bản tin thị trường",color: "#0C7B09", bg: "#E7F5E7" },
+  recruitment: { label: "Tuyển dụng",        color: "#EA8C00", bg: "#FDF1DE" },
+};
+
+const urgent = [{
+  id: "u1",
+  title: "Bảo trì hệ thống Email & VPN",
+  detail: "Hệ thống Email và VPN tạm ngưng từ 22:00 hôm nay đến 02:00 sáng mai để nâng cấp. Vui lòng lưu công việc trước thời gian trên.",
+  time: "Hôm nay · 09:15"
+}];
+
+const news = [
+  { id:"n1", cat:"company", thumb:"📅", title:"Lịch nghỉ lễ Quốc khánh 02/09/2026",
+    summary:"Công ty nghỉ lễ từ 31/08 đến hết 02/09. Bộ phận trực vận hành đăng ký với Trưởng phòng trước 25/08.",
+    author:"Phòng Hành chính - Nhân sự", time:"Hôm nay · 10:20", pinned:true, isNew:true, ack:true, views:482 },
+  { id:"n2", cat:"leadership", thumb:"🎯", title:"Thông điệp BLĐ: Văn hóa lấy khách hàng làm trọng tâm",
+    summary:"Ban Lãnh đạo chia sẻ định hướng xây dựng văn hóa phục vụ khách hàng và lộ trình triển khai toàn hệ thống.",
+    author:"Ban Lãnh đạo", time:"Hôm nay · 08:00", isNew:true, views:651 },
+  { id:"n3", cat:"company", thumb:"🧾", title:"Triển khai quy trình phê duyệt chi phí mới trên SMART",
+    summary:"Từ 01/07, toàn bộ đề nghị thanh toán & công tác phí chuyển sang phê duyệt điện tử. Xem hướng dẫn đính kèm.",
+    author:"Phòng Tài chính - Kế toán", time:"Hôm qua · 16:45", ack:true, views:327 },
+  { id:"n4", cat:"market", thumb:"📈", title:"Bản tin sáng: VN-Index tiếp đà hồi phục",
+    summary:"Khối ngoại mua ròng phiên thứ 3 liên tiếp, dòng tiền tập trung nhóm ngân hàng và chứng khoán.",
+    author:"Khối Phân tích (Research)", time:"Hôm nay · 07:45", isNew:true, views:540 },
+  { id:"n5", cat:"market", thumb:"🏦", title:"Báo cáo cập nhật ngành Ngân hàng — nửa cuối 2026",
+    summary:"Khối Phân tích phát hành báo cáo cập nhật ngành ngân hàng kèm khuyến nghị danh mục theo dõi.",
+    author:"Khối Phân tích (Research)", time:"Hôm qua · 14:10", views:289 },
+  { id:"n6", cat:"recruitment", thumb:"👋", title:"Chào mừng 8 đồng nghiệp mới gia nhập TVS tháng 6",
+    summary:"TVS chào đón thành viên mới ở Khối Công nghệ, Môi giới và Vận hành. Hãy gửi lời chào tới các bạn!",
+    author:"Phòng Hành chính - Nhân sự", time:"2 ngày trước", views:712 },
+  { id:"n7", cat:"company", thumb:"📝", title:"Khảo sát mức độ hài lòng nội bộ Quý II",
+    summary:"Mời CBNV dành 5 phút thực hiện khảo sát ẩn danh để giúp công ty cải thiện môi trường làm việc. Hạn: 30/06.",
+    author:"Phòng Hành chính - Nhân sự", time:"2 ngày trước", views:198 },
+  { id:"n8", cat:"leadership", thumb:"🎙️", title:"Tóm tắt Town Hall tháng 6: Kết quả & kế hoạch",
+    summary:"Xem lại nội dung và video buổi gặp mặt toàn công ty: kết quả 6 tháng và định hướng sắp tới.",
+    author:"Ban Lãnh đạo", time:"3 ngày trước", views:603 },
+];
+
+const approvals = [
+  { id:"a1", type:"leave",    icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép",   av:"TB", name:"Trần Thị B",  dept:"Khối Môi giới",  sub:"1 giờ trước",      detail:"Nghỉ phép 3 ngày (24–26/06)" },
+  { id:"a2", type:"expense",  icon:"💳", tcolor:"#0C7B09", tlabel:"Công tác phí", av:"LC", name:"Lê Văn C",    dept:"Khối Phân tích", sub:"3 giờ trước",      detail:"Công tác phí — họp đối tác Hà Nội", amount:"4.500.000 đ" },
+  { id:"a3", type:"purchase", icon:"🛒", tcolor:"#EA8C00", tlabel:"Mua sắm",      av:"PD", name:"Phạm Thị D",  dept:"Phòng IT",       sub:"Hôm qua · 17:20", detail:"Đề nghị mua 2 màn hình Dell 27\"", amount:"12.800.000 đ" },
+  { id:"a4", type:"leave",    icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép",   av:"HE", name:"Hoàng Văn E", dept:"Khối Vận hành",  sub:"Hôm qua · 09:05", detail:"Nghỉ phép 1 ngày (27/06)" },
+];
+
+const links = [
+  { ic:"👥", name:"Cổng HRM", desc:"Chấm công, nghỉ phép, phiếu lương" },
+  { ic:"📊", name:"Research Center", desc:"Báo cáo phân tích của TVS" },
+  { ic:"🎧", name:"IT Helpdesk", desc:"Gửi yêu cầu hỗ trợ kỹ thuật" },
+  { ic:"📁", name:"Kho tài liệu nội bộ", desc:"Biểu mẫu, quy trình, chính sách" },
+];
+
+/* ===================== TIỆN ÍCH ===================== */
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---- Đồng hồ + lời chào ---- */
+const WD = ["Chủ nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
+function tick() {
+  const n = new Date();
+  $("#clock-time").textContent = n.toLocaleTimeString("vi-VN", {hour:"2-digit", minute:"2-digit"});
+  $("#clock-date").textContent = `${WD[n.getDay()]}, ${n.getDate()}/${n.getMonth()+1}/${n.getFullYear()}`;
+  const h = n.getHours();
+  const g = h < 11 ? "Chào buổi sáng" : h < 14 ? "Chào buổi trưa" : h < 18 ? "Chào buổi chiều" : "Chào buổi tối";
+  $("#greeting").textContent = `${g} 👋 · Cập nhật tức thời toàn công ty`;
+}
+tick(); setInterval(tick, 1000 * 20);
+
+/* ---- Urgent banner ---- */
+function renderUrgent() {
+  $("#urgent-wrap").innerHTML = urgent.map(u => `
+    <div class="urgent" data-id="${u.id}">
+      <div class="u-ico">⚠️</div>
+      <div style="flex:1;min-width:0">
+        <div><span class="u-title">KHẨN · ${esc(u.title)}</span><span class="u-time">${esc(u.time)}</span></div>
+        <div class="u-detail">${esc(u.detail)}</div>
+      </div>
+      <button class="u-x" title="Đóng" onclick="this.closest('.urgent').remove()">×</button>
+    </div>`).join("");
+}
+renderUrgent();
+
+/* ---- News feed (tabs + search) ---- */
+let activeTab = "all";
+let query = "";
+const TABS = [
+  ["all","Tất cả"],["company","Thông báo công ty"],["leadership","Ban Lãnh đạo"],
+  ["market","Bản tin thị trường"],["recruitment","Tuyển dụng"]
+];
+function renderTabs() {
+  $("#tabs").innerHTML = TABS.map(([k,l]) =>
+    `<button class="tab ${k===activeTab?'active':''}" data-tab="${k}">${l}</button>`).join("");
+  document.querySelectorAll(".tab").forEach(b =>
+    b.onclick = () => { activeTab = b.dataset.tab; renderTabs(); renderNews(); });
+}
+function renderNews() {
+  const q = query.trim().toLowerCase();
+  let list = news.filter(n => activeTab === "all" || n.cat === activeTab);
+  if (q) list = list.filter(n =>
+    (n.title + n.summary + n.author).toLowerCase().includes(q));
+  list = list.slice().sort((a,b) => (b.pinned?1:0) - (a.pinned?1:0));
+
+  if (!list.length) { $("#news-list").innerHTML = `<div class="empty">Không tìm thấy thông báo phù hợp.</div>`; return; }
+  $("#news-list").innerHTML = list.map(n => {
+    const c = CAT[n.cat];
+    return `
+    <div class="news">
+      <div class="thumb" style="background:${c.bg}">${n.thumb}</div>
+      <div class="body">
+        <div class="chips">
+          <span class="chip" style="color:${c.color};background:${c.bg}">${c.label}</span>
+          ${n.pinned ? `<span class="pin">📌</span>` : ""}
+          ${n.isNew ? `<span class="chip chip-new">MỚI</span>` : ""}
+          ${n.ack ? `<span class="chip chip-ack">Cần xác nhận đọc</span>` : ""}
+        </div>
+        <h3>${esc(n.title)}</h3>
+        <div class="summ">${esc(n.summary)}</div>
+        <div class="meta">
+          <span class="auth">${esc(n.author)}</span>
+          <span>· ${esc(n.time)}</span>
+          <span>👁 ${n.views}</span>
+          ${n.ack ? `<button class="ack-btn" onclick="ackRead(this)">✓ Xác nhận đã đọc</button>` : ""}
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+}
+function ackRead(btn) {
+  btn.classList.add("done");
+  btn.textContent = "✓ Đã xác nhận";
+  btn.onclick = null;
+}
+$("#search").addEventListener("input", e => { query = e.target.value; renderNews(); });
+renderTabs(); renderNews();
+
+/* ---- Approvals ---- */
+function renderAppr() {
+  $("#appr-list").innerHTML = approvals.map(a => `
+    <div class="appr" data-id="${a.id}">
+      <div class="avatar">${a.av}</div>
+      <div class="a-body">
+        <div class="a-name">${esc(a.name)} <span style="font-size:12px">${a.icon}</span>
+          <span class="a-type" style="color:${a.tcolor}">${a.tlabel}</span></div>
+        <div class="a-detail">${esc(a.detail)}</div>
+        <div class="a-sub"><span>${esc(a.dept)} · ${esc(a.sub)}</span>${a.amount?`<span class="a-amount">${esc(a.amount)}</span>`:""}</div>
+      </div>
+      <div class="a-actions">
+        <button class="a-btn a-ok" title="Duyệt" onclick="resolveAppr('${a.id}','ok')">✓</button>
+        <button class="a-btn a-no" title="Từ chối" onclick="resolveAppr('${a.id}','no')">×</button>
+      </div>
+    </div>`).join("");
+  updateApprCount();
+}
+function resolveAppr(id, kind) {
+  const row = document.querySelector(`.appr[data-id="${id}"]`);
+  if (!row) return;
+  row.classList.add("resolved");
+  const ok = kind === "ok";
+  row.querySelector(".a-actions").outerHTML =
+    `<span class="a-status" style="color:${ok?'var(--green)':'var(--red)'};background:${ok?'#E7F5E7':'#FDECEC'}">${ok?'Đã duyệt':'Từ chối'}</span>`;
+  updateApprCount();
+}
+function updateApprCount() {
+  const n = document.querySelectorAll(".appr:not(.resolved)").length;
+  const badge = $("#appr-count");
+  badge.textContent = n;
+  badge.style.background = n > 0 ? "var(--red)" : "#9CA3AF";
+}
+renderAppr();
+
+/* ---- Quick links ---- */
+$("#links").innerHTML = links.map(l => `
+  <div class="ql">
+    <div class="ql-ico">${l.ic}</div>
+    <div class="ql-name">${esc(l.name)}</div>
+    <div class="ql-desc">${esc(l.desc)}</div>
+  </div>`).join("");
+</script>
+</body>
+</html>

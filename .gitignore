@@ -1,0 +1,9 @@
+# Claude Code session data — không publish
+.clsessions/
+
+# macOS
+.DS_Store
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>TVS · CMS Quản trị nội dung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --tvs-blue: #124E91; --tvs-blue-dark: #03336A; --tvs-blue-light: #1A66B8;
+    --bg: #f4f6f9; --card-border: #EDEFF2; --ink: #1F2937; --muted: #6B7280; --faint: #9CA3AF;
+    --red: #DC3545; --green: #0C7B09; --orange: #EA8C00; --violet: #6D28D9; --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg); color: var(--ink); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  ::-webkit-scrollbar { width: 9px; height: 9px; }
+  ::-webkit-scrollbar-thumb { background: #c8d2dd; border-radius: 8px; }
+
+  /* App bar */
+  .appbar { height: 60px; background: #fff; border-bottom: 1px solid #eef1f4; display: flex;
+    align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 40; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .logo-badge { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center;
+    background: linear-gradient(135deg, var(--tvs-blue-dark), var(--tvs-blue-light)); color: #fff; font-weight: 800; letter-spacing: .5px; }
+  .brand .title { font-size: 19px; font-weight: 800; color: var(--ink); }
+  .brand .title small { display: block; font-size: 11.5px; font-weight: 600; color: var(--faint); }
+  .right { display: flex; align-items: center; gap: 16px; }
+  .link-pill { text-decoration: none; background: #EAF1FA; color: var(--tvs-blue); font-weight: 700;
+    font-size: 12.5px; padding: 9px 14px; border-radius: 999px; }
+  .avatar { width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center;
+    background: #EAF1FA; color: var(--tvs-blue); font-weight: 800; font-size: 13px; }
+
+  main { max-width: 1320px; margin: 0 auto; padding: 24px; }
+  .page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 18px; flex-wrap: wrap; }
+  .page-head h1 { font-size: 23px; font-weight: 800; }
+  .page-head p { color: var(--muted); font-size: 13px; margin-top: 2px; }
+
+  .btn { border: none; cursor: pointer; font-family: inherit; font-weight: 700; border-radius: 10px;
+    display: inline-flex; align-items: center; gap: 7px; font-size: 13.5px; padding: 10px 16px; }
+  .btn-primary { background: var(--tvs-blue); color: #fff; }
+  .btn-primary:hover { background: #0E3F76; }
+  .btn-green { background: var(--green); color: #fff; }
+  .btn-green:hover { background: #0a6707; }
+  .btn-ghost { background: #fff; color: var(--ink); border: 1px solid #dfe5ec; }
+  .btn-ghost:hover { background: #f6f8fb; }
+  .btn-soft { background: #EAF1FA; color: var(--tvs-blue); }
+
+  /* Toolbar */
+  .toolbar { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .tabs { display: flex; gap: 6px; background: #fff; border: 1px solid var(--card-border); padding: 4px; border-radius: 12px; }
+  .tab { border: none; background: none; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 13px;
+    padding: 7px 14px; border-radius: 9px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  .tab.active { background: var(--tvs-blue); color: #fff; }
+  .tab .cnt { background: rgba(0,0,0,.08); border-radius: 999px; font-size: 11px; padding: 1px 7px; font-weight: 800; }
+  .tab.active .cnt { background: rgba(255,255,255,.25); }
+  .grow { flex: 1; }
+  .field { display: flex; align-items: center; gap: 8px; background: #fff; border: 1px solid #dfe5ec;
+    border-radius: 10px; padding: 0 12px; height: 40px; }
+  .field input, .field select { border: none; outline: none; background: transparent; font-family: inherit;
+    font-size: 13.5px; color: var(--ink); height: 100%; }
+  .field input { width: 230px; }
+  select { cursor: pointer; }
+
+  /* Table */
+  .table-card { background: #fff; border: 1px solid var(--card-border); border-radius: var(--radius); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: .4px; color: var(--faint);
+    font-weight: 700; padding: 13px 16px; border-bottom: 1px solid #f0f2f5; background: #fafbfc; }
+  tbody td { padding: 13px 16px; border-bottom: 1px solid #f3f5f7; vertical-align: middle; }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: #f9fbfd; }
+  tbody tr:last-child td { border-bottom: none; }
+  .t-title { font-weight: 700; font-size: 14px; color: var(--ink); display: flex; align-items: center; gap: 7px; }
+  tbody tr:hover .t-title { color: var(--tvs-blue); }
+  .t-sub { display: flex; align-items: center; gap: 6px; margin-top: 5px; flex-wrap: wrap; }
+  .chip { height: 20px; display: inline-flex; align-items: center; padding: 0 8px; border-radius: 6px; font-size: 10.5px; font-weight: 700; }
+  .mini { font-size: 10.5px; color: var(--faint); }
+  .dept { font-weight: 600; font-size: 13px; color: var(--muted); }
+  .status { height: 24px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 7px; font-size: 11.5px; font-weight: 700; }
+  .acts { display: flex; gap: 6px; justify-content: flex-end; }
+  .iact { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e6eaef; background: #fff; cursor: pointer;
+    display: grid; place-items: center; font-size: 13px; color: #475569; }
+  .iact:hover { background: #f0f4f8; }
+  .iact.danger:hover { background: #FDECEC; color: var(--red); border-color: #f3c7cc; }
+  .iact.pin.on { background: #FFF1F1; color: var(--red); border-color: #f3c7cc; }
+  .iact.pub { color: var(--green); border-color: #cdeccd; background: #F2FBF2; }
+  .iact.pub:hover { background: var(--green); color: #fff; }
+  .empty { text-align: center; padding: 40px; color: var(--faint); }
+
+  /* Modal */
+  .overlay { position: fixed; inset: 0; background: rgba(15,23,42,.45); display: none; align-items: flex-start;
+    justify-content: center; padding: 40px 16px; z-index: 80; overflow-y: auto; }
+  .overlay.show { display: flex; }
+  .modal { background: #fff; width: 100%; max-width: 640px; border-radius: 18px; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #eef1f4; }
+  .modal-head h3 { font-size: 17px; font-weight: 800; }
+  .x { border: none; background: #f3f5f8; width: 34px; height: 34px; border-radius: 9px; cursor: pointer; font-size: 16px; color: #475569; }
+  .modal-body { padding: 20px 22px; max-height: 66vh; overflow-y: auto; }
+  .modal-foot { display: flex; align-items: center; justify-content: flex-end; gap: 10px; padding: 16px 22px; border-top: 1px solid #eef1f4; }
+  .grp { margin-bottom: 16px; }
+  .grp > label { display: block; font-weight: 700; font-size: 12.5px; color: #374151; margin-bottom: 7px; }
+  .grp .req { color: var(--red); }
+  .inp, .ta, .sel { width: 100%; border: 1px solid #dfe5ec; border-radius: 10px; padding: 10px 12px;
+    font-family: inherit; font-size: 14px; color: var(--ink); outline: none; background: #fff; }
+  .inp:focus, .ta:focus, .sel:focus { border-color: var(--tvs-blue); box-shadow: 0 0 0 3px rgba(18,78,145,.1); }
+  .ta { resize: vertical; min-height: 120px; }
+  .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .checks { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .check { display: flex; align-items: center; gap: 9px; border: 1px solid #e6eaef; border-radius: 10px; padding: 9px 11px; cursor: pointer; font-size: 13px; }
+  .check input { width: 16px; height: 16px; accent-color: var(--tvs-blue); }
+  .toggles { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tg { display: flex; align-items: center; gap: 8px; border: 1px solid #e6eaef; border-radius: 999px; padding: 8px 13px; cursor: pointer; font-size: 12.5px; font-weight: 600; }
+  .tg input { accent-color: var(--tvs-blue); }
+
+  /* Preview */
+  .pv-cat { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; flex-wrap: wrap; }
+  .pv-title { font-size: 23px; font-weight: 800; line-height: 1.28; margin-bottom: 10px; }
+  .pv-meta { font-size: 12.5px; color: var(--faint); margin-bottom: 14px; display: flex; gap: 10px; flex-wrap: wrap; }
+  .pv-urgent { display: flex; gap: 10px; align-items: flex-start; background: #FDECEC; border: 1px solid #F5C2C2;
+    border-left: 4px solid var(--red); border-radius: 10px; padding: 11px 14px; margin-bottom: 16px; color: #7A1F27; font-size: 13px; }
+  .pv-lead { font-size: 15px; color: #374151; font-weight: 600; border-left: 3px solid var(--tvs-blue);
+    padding-left: 12px; margin-bottom: 16px; line-height: 1.6; }
+  .pv-body { font-size: 14px; color: #374151; line-height: 1.8; white-space: pre-wrap; }
+
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0;
+    background: #111827; color: #fff; padding: 11px 18px; border-radius: 10px; font-size: 13px; font-weight: 600;
+    transition: all .25s ease; z-index: 100; pointer-events: none; }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  .mock-tag { position: fixed; bottom: 14px; right: 14px; background: #111827; color: #fff; font-size: 11px;
+    padding: 6px 12px; border-radius: 999px; opacity: .8; z-index: 60; }
+
+  @media (max-width: 720px) {
+    .hide-sm { display: none; }
+    .field input { width: 150px; }
+    .row2, .checks { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="appbar">
+    <div class="brand">
+      <div class="logo-badge">TVS</div>
+      <div class="title">CMS Quản trị nội dung<small>Trung tâm Thông tin Nội bộ</small></div>
+    </div>
+    <div class="right">
+      <a href="index.html" class="link-pill">← Xem trang Hub</a>
+      <div class="avatar">QT</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="page-head">
+      <div>
+        <h1>Quản trị thông báo</h1>
+        <p>Tạo, phê duyệt và publish nội dung hiển thị trên trang thông tin nội bộ.</p>
+      </div>
+      <button class="btn btn-primary" id="btn-new">＋ Tạo thông báo</button>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <div class="tabs">
+        <button class="tab active" data-view="all">Tất cả bài viết <span class="cnt" id="cnt-all">0</span></button>
+        <button class="tab" data-view="pending">Chờ publish <span class="cnt" id="cnt-pending">0</span></button>
+      </div>
+      <div class="grow"></div>
+      <div class="field"><span>🔍</span><input id="search" placeholder="Tìm tiêu đề, phòng ban..." /></div>
+      <div class="field">
+        <span>🏷️</span>
+        <select id="f-cat">
+          <option value="">Tất cả nhóm</option>
+          <option value="urgent">Khẩn</option>
+          <option value="company">Thông báo công ty</option>
+          <option value="leadership">Ban Lãnh đạo</option>
+          <option value="market">Bản tin thị trường</option>
+          <option value="recruitment">Tuyển dụng</option>
+        </select>
+      </div>
+      <div class="field">
+        <span>📌</span>
+        <select id="f-status">
+          <option value="">Mọi trạng thái</option>
+          <option value="published">Đã đăng</option>
+          <option value="pending">Chờ publish</option>
+          <option value="draft">Bản nháp</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:50%">Tiêu đề</th>
+            <th class="hide-sm">Phòng ban</th>
+            <th>Trạng thái</th>
+            <th class="hide-sm">Cập nhật</th>
+            <th style="text-align:right">Hành động</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal tạo/sửa -->
+  <div class="overlay" id="overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="modal-title">Tạo thông báo mới</h3>
+        <button class="x" id="modal-x">×</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="f-id" />
+        <div class="grp">
+          <label>Tiêu đề <span class="req">*</span></label>
+          <input class="inp" id="f-title" placeholder="Ví dụ: Lịch nghỉ lễ Quốc khánh 02/09/2026" />
+        </div>
+        <div class="row2">
+          <div class="grp">
+            <label>Nhóm nội dung <span class="req">*</span></label>
+            <select class="sel" id="f-category">
+              <option value="company">Thông báo công ty</option>
+              <option value="leadership">Ban Lãnh đạo</option>
+              <option value="market">Bản tin thị trường</option>
+              <option value="recruitment">Tuyển dụng</option>
+              <option value="urgent">Khẩn</option>
+            </select>
+          </div>
+          <div class="grp">
+            <label>Phòng ban</label>
+            <input class="inp" id="f-dept" placeholder="Phòng Hành chính - Nhân sự" />
+          </div>
+        </div>
+        <div class="grp">
+          <label>Tóm tắt</label>
+          <input class="inp" id="f-summary" placeholder="Mô tả ngắn hiển thị trong thẻ tin..." />
+        </div>
+        <div class="grp">
+          <label>Nội dung</label>
+          <textarea class="ta" id="f-content" placeholder="Soạn nội dung chi tiết thông báo..."></textarea>
+        </div>
+        <div class="grp">
+          <label>Phòng ban nhận thông báo</label>
+          <div class="checks" id="f-depts">
+            <label class="check"><input type="checkbox" value="all" checked /> Toàn công ty</label>
+            <label class="check"><input type="checkbox" value="broker" /> Khối Môi giới</label>
+            <label class="check"><input type="checkbox" value="research" /> Khối Phân tích</label>
+            <label class="check"><input type="checkbox" value="tech" /> Khối Công nghệ</label>
+            <label class="check"><input type="checkbox" value="ops" /> Khối Vận hành</label>
+            <label class="check"><input type="checkbox" value="hr" /> Hành chính - Nhân sự</label>
+          </div>
+        </div>
+        <div class="grp">
+          <label>Tùy chọn hiển thị</label>
+          <div class="toggles">
+            <label class="tg"><input type="checkbox" id="o-pin" /> 📌 Ghim lên đầu</label>
+            <label class="tg"><input type="checkbox" id="o-ack" /> ✅ Yêu cầu xác nhận đã đọc</label>
+            <label class="tg"><input type="checkbox" id="o-urgent" /> ⚠️ Đánh dấu KHẨN</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="m-cancel">Hủy</button>
+        <button class="btn btn-soft" id="m-draft">Lưu nháp</button>
+        <button class="btn btn-primary" id="m-save" data-mode="pending">Lưu → Chờ publish</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal preview -->
+  <div class="overlay" id="pv-overlay">
+    <div class="modal">
+      <div class="modal-head">
+        <h3>👁 Xem trước thông báo</h3>
+        <button class="x" id="pv-x">×</button>
+      </div>
+      <div class="modal-body" id="pv-body"></div>
+      <div class="modal-foot">
+        <button class="btn btn-ghost" id="pv-edit">✎ Sửa</button>
+        <button class="btn btn-green" id="pv-publish">▶ Publish</button>
+        <button class="btn btn-soft" id="pv-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="mock-tag">● MOCKUP CMS · dummy data</div>
+
+<script>
+const CAT = {
+  urgent:      { label: "Khẩn",              color: "#DC3545", bg: "#FDECEC", emoji: "⚠️" },
+  company:     { label: "Thông báo công ty", color: "#124E91", bg: "#E8F0FA", emoji: "🏢" },
+  leadership:  { label: "Ban Lãnh đạo",      color: "#6D28D9", bg: "#F1EBFB", emoji: "🎯" },
+  market:      { label: "Bản tin thị trường",color: "#0C7B09", bg: "#E7F5E7", emoji: "📈" },
+  recruitment: { label: "Tuyển dụng",        color: "#EA8C00", bg: "#FDF1DE", emoji: "🧑‍💼" },
+};
+const ST = {
+  published: { label: "Đã đăng",    color: "#0C7B09", bg: "#E7F5E7" },
+  pending:   { label: "Chờ publish",color: "#EA8C00", bg: "#FDF1DE" },
+  draft:     { label: "Bản nháp",   color: "#6B7280", bg: "#F3F4F6" },
+};
+
+let posts = [
+  { id:"p1", title:"Lịch nghỉ lễ Quốc khánh 02/09/2026", cat:"company", dept:"Phòng Hành chính - Nhân sự",
+    summary:"Công ty nghỉ lễ từ 31/08 đến hết 02/09.",
+    content:"Kính gửi toàn thể CBNV,\n\nCông ty thông báo lịch nghỉ lễ Quốc khánh 02/09/2026: nghỉ từ ngày 31/08 đến hết ngày 02/09, đi làm trở lại vào 03/09.\n\nCác bộ phận trực vận hành vui lòng đăng ký lịch trực với Trưởng phòng trước ngày 25/08.",
+    status:"published", date:"19/06/2026 10:20", pinned:true, ack:true, urgent:false },
+  { id:"p2", title:"Thông điệp BLĐ: Văn hóa lấy khách hàng làm trọng tâm", cat:"leadership", dept:"Ban Lãnh đạo",
+    summary:"Định hướng xây dựng văn hóa phục vụ khách hàng.",
+    content:"Ban Lãnh đạo chia sẻ định hướng xây dựng văn hóa lấy khách hàng làm trọng tâm và lộ trình triển khai trong toàn hệ thống giai đoạn 2026–2027.",
+    status:"published", date:"19/06/2026 08:00", pinned:false, ack:false, urgent:false },
+  { id:"p3", title:"Bảo trì hệ thống Email & VPN tối nay", cat:"urgent", dept:"Phòng IT",
+    summary:"Tạm ngưng 22:00 hôm nay đến 02:00 sáng mai.",
+    content:"Hệ thống Email và VPN sẽ tạm ngưng từ 22:00 hôm nay đến 02:00 sáng mai để nâng cấp hạ tầng. Vui lòng lưu công việc trước thời gian trên. Mọi sự cố liên hệ IT Helpdesk.",
+    status:"published", date:"19/06/2026 09:15", pinned:true, ack:false, urgent:true },
+  { id:"p4", title:"Triển khai quy trình phê duyệt chi phí mới trên SMART", cat:"company", dept:"Phòng Tài chính - Kế toán",
+    summary:"Từ 01/07, đề nghị thanh toán chuyển sang điện tử.",
+    content:"Từ 01/07/2026, toàn bộ đề nghị thanh toán và công tác phí sẽ chuyển sang phê duyệt điện tử trên hệ thống SMART. Hướng dẫn chi tiết đính kèm trong tài liệu nội bộ.",
+    status:"pending", date:"19/06/2026 11:00", pinned:false, ack:true, urgent:false },
+  { id:"p5", title:"Báo cáo cập nhật ngành Ngân hàng — nửa cuối 2026", cat:"market", dept:"Khối Phân tích",
+    summary:"Khuyến nghị danh mục theo dõi nửa cuối năm.",
+    content:"Khối Phân tích phát hành báo cáo cập nhật ngành Ngân hàng với khuyến nghị danh mục theo dõi cho nửa cuối 2026. Tải báo cáo đầy đủ tại Research Center.",
+    status:"published", date:"18/06/2026 14:10", pinned:false, ack:false, urgent:false },
+  { id:"p6", title:"Tuyển dụng nội bộ: Fullstack Developer (React/Node)", cat:"recruitment", dept:"Khối Công nghệ",
+    summary:"Thưởng giới thiệu 12.000.000đ.",
+    content:"Khối Công nghệ cần tuyển 01 Fullstack Developer (React/Node). CBNV giới thiệu ứng viên trúng tuyển nhận thưởng 12.000.000đ. Liên hệ HR để biết thêm chi tiết.",
+    status:"pending", date:"19/06/2026 11:30", pinned:false, ack:false, urgent:false },
+  { id:"p7", title:"Khảo sát mức độ hài lòng nội bộ Quý II", cat:"company", dept:"Phòng Hành chính - Nhân sự",
+    summary:"Khảo sát ẩn danh, hạn 30/06.",
+    content:"Mời CBNV dành 5 phút thực hiện khảo sát ẩn danh nhằm giúp công ty cải thiện môi trường làm việc. Thời hạn: hết ngày 30/06/2026.",
+    status:"draft", date:"17/06/2026 16:00", pinned:false, ack:false, urgent:false },
+  { id:"p8", title:"Cập nhật chính sách phúc lợi bảo hiểm sức khỏe", cat:"company", dept:"Phòng Hành chính - Nhân sự",
+    summary:"Áp dụng gói bảo hiểm mới từ Quý III.",
+    content:"Công ty áp dụng gói bảo hiểm sức khỏe mới cho CBNV từ Quý III/2026 với quyền lợi mở rộng. Chi tiết quyền lợi và hướng dẫn sử dụng sẽ được gửi qua email.",
+    status:"pending", date:"19/06/2026 09:45", pinned:false, ack:true, urgent:false },
+];
+
+const $ = (s) => document.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let view = "all", q = "", fCat = "", fStatus = "", seq = 100, previewId = null;
+
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(window.__tt); window.__tt = setTimeout(() => t.classList.remove("show"), 1900);
+}
+function nowStr() {
+  const n = new Date(), p = (x) => String(x).padStart(2, "0");
+  return `${p(n.getDate())}/${p(n.getMonth()+1)}/${n.getFullYear()} ${p(n.getHours())}:${p(n.getMinutes())}`;
+}
+
+function renderCounts() {
+  $("#cnt-all").textContent = posts.length;
+  $("#cnt-pending").textContent = posts.filter(p => p.status === "pending").length;
+}
+
+function renderTable() {
+  let list = posts.slice();
+  if (view === "pending") list = list.filter(p => p.status === "pending");
+  if (q) { const k = q.toLowerCase(); list = list.filter(p => (p.title + p.dept).toLowerCase().includes(k)); }
+  if (fCat) list = list.filter(p => p.cat === fCat);
+  if (fStatus) list = list.filter(p => p.status === fStatus);
+  list.sort((a, b) => (b.pinned?1:0) - (a.pinned?1:0));
+
+  if (!list.length) { $("#tbody").innerHTML = `<tr><td colspan="5"><div class="empty">Không có bài viết phù hợp.</div></td></tr>`; return; }
+
+  $("#tbody").innerHTML = list.map(p => {
+    const c = CAT[p.cat], s = ST[p.status];
+    const flags = [
+      p.pinned ? `<span class="mini">📌 Ghim</span>` : "",
+      p.ack ? `<span class="mini">✅ Cần xác nhận</span>` : "",
+      p.urgent ? `<span class="mini" style="color:var(--red)">⚠️ Khẩn</span>` : "",
+    ].filter(Boolean).join("");
+    const live = p.status === "published";
+    return `
+    <tr data-id="${p.id}">
+      <td>
+        <div class="t-title">${esc(p.title)}</div>
+        <div class="t-sub">
+          <span class="chip" style="color:${c.color};background:${c.bg}">${c.label}</span>
+          ${flags}
+        </div>
+      </td>
+      <td class="hide-sm"><span class="dept">${esc(p.dept)}</span></td>
+      <td><span class="status" style="color:${s.color};background:${s.bg}">${s.label}</span></td>
+      <td class="hide-sm mini" style="font-size:12.5px;color:var(--muted)">${esc(p.date)}</td>
+      <td>
+        <div class="acts">
+          ${live
+            ? `<button class="iact pin ${p.pinned?'on':''}" data-act="pin" title="Ghim/Bỏ ghim">📌</button>`
+            : `<button class="iact pub" data-act="publish" title="Publish — đăng lên">▶</button>`}
+          <button class="iact" data-act="edit" title="Sửa">✎</button>
+          <button class="iact danger" data-act="del" title="Xóa">🗑</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+function render() { renderCounts(); renderTable(); }
+
+/* ---- Row click: actions hoặc preview ---- */
+$("#tbody").addEventListener("click", (e) => {
+  const tr = e.target.closest("tr[data-id]"); if (!tr) return;
+  const p = posts.find(x => x.id === tr.dataset.id); if (!p) return;
+  const btn = e.target.closest("[data-act]");
+  if (!btn) return openPreview(p);               // click vào dòng -> xem trước
+  const act = btn.dataset.act;
+  if (act === "pin") { p.pinned = !p.pinned; toast(p.pinned ? "Đã ghim bài viết" : "Đã bỏ ghim"); }
+  else if (act === "publish") { p.status = "published"; p.date = nowStr(); toast("Đã publish — bài viết đã đăng lên trang"); }
+  else if (act === "edit") return openModal("edit", p);
+  else if (act === "del") { if (confirm(`Xóa "${p.title}"?`)) { posts = posts.filter(x => x.id !== p.id); toast("Đã xóa bài viết"); } else return; }
+  render();
+});
+
+/* ---- Filters & tabs ---- */
+$("#search").addEventListener("input", e => { q = e.target.value; renderTable(); });
+$("#f-cat").addEventListener("change", e => { fCat = e.target.value; renderTable(); });
+$("#f-status").addEventListener("change", e => { fStatus = e.target.value; renderTable(); });
+document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+  document.querySelectorAll(".tab").forEach(x => x.classList.remove("active"));
+  t.classList.add("active"); view = t.dataset.view; renderTable();
+}));
+
+/* ---- Modal tạo/sửa ---- */
+function openModal(mode, p) {
+  const edit = mode === "edit";
+  $("#modal-title").textContent = edit ? "Sửa thông báo" : "Tạo thông báo mới";
+  $("#f-id").value = edit ? p.id : "";
+  $("#f-title").value = edit ? p.title : "";
+  $("#f-category").value = edit ? p.cat : "company";
+  $("#f-dept").value = edit ? p.dept : "";
+  $("#f-summary").value = edit ? p.summary : "";
+  $("#f-content").value = edit ? (p.content || "") : "";
+  $("#o-pin").checked = edit ? !!p.pinned : false;
+  $("#o-ack").checked = edit ? !!p.ack : false;
+  $("#o-urgent").checked = edit ? (p.cat === "urgent" || !!p.urgent) : false;
+  // edit: giữ nguyên trạng thái hiện tại; tạo mới: lưu vào "Chờ publish"
+  $("#m-draft").style.display = edit ? "none" : "";
+  const save = $("#m-save");
+  save.textContent = edit ? "Lưu thay đổi" : "Lưu → Chờ publish";
+  save.dataset.mode = edit ? "keep" : "pending";
+  $("#overlay").classList.add("show");
+}
+function closeModal() { $("#overlay").classList.remove("show"); }
+function saveModal(target) {
+  const title = $("#f-title").value.trim();
+  if (!title) { toast("Vui lòng nhập tiêu đề"); $("#f-title").focus(); return; }
+  const id = $("#f-id").value;
+  const urgent = $("#o-urgent").checked;
+  const data = {
+    title,
+    cat: urgent ? "urgent" : $("#f-category").value,
+    dept: $("#f-dept").value.trim() || "Chưa rõ phòng ban",
+    summary: $("#f-summary").value.trim(),
+    content: $("#f-content").value.trim(),
+    pinned: $("#o-pin").checked,
+    ack: $("#o-ack").checked,
+    urgent,
+  };
+  if (id) {
+    const p = posts.find(x => x.id === id);
+    const status = target === "keep" ? p.status : target;
+    Object.assign(p, data, { status, date: nowStr() });
+    toast("Đã cập nhật bài viết");
+  } else {
+    posts.unshift({ id: "p" + (++seq), date: nowStr(), status: target, ...data });
+    toast(target === "draft" ? "Đã lưu bản nháp" : "Đã lưu — chờ publish");
+  }
+  closeModal(); render();
+}
+$("#btn-new").addEventListener("click", () => openModal("new"));
+$("#modal-x").addEventListener("click", closeModal);
+$("#m-cancel").addEventListener("click", closeModal);
+$("#m-draft").addEventListener("click", () => saveModal("draft"));
+$("#m-save").addEventListener("click", () => saveModal($("#m-save").dataset.mode));
+$("#overlay").addEventListener("click", (e) => { if (e.target.id === "overlay") closeModal(); });
+
+/* ---- Modal preview ---- */
+function openPreview(p) {
+  previewId = p.id;
+  const c = CAT[p.cat], s = ST[p.status];
+  const flags = [
+    p.pinned ? `<span class="chip" style="color:var(--red);background:#FFF1F1">📌 Ghim lên đầu</span>` : "",
+    p.ack ? `<span class="chip" style="color:var(--orange);background:#FDF1DE">✅ Yêu cầu xác nhận đọc</span>` : "",
+  ].filter(Boolean).join(" ");
+  $("#pv-body").innerHTML = `
+    <div class="pv-cat">
+      <span class="chip" style="color:${c.color};background:${c.bg}">${c.emoji} ${c.label}</span>
+      <span class="status" style="color:${s.color};background:${s.bg}">${s.label}</span>
+      ${flags}
+    </div>
+    ${p.urgent ? `<div class="pv-urgent"><span>⚠️</span><div><b>THÔNG BÁO KHẨN</b> — nội dung sẽ hiển thị nổi bật trên cùng trang Hub.</div></div>` : ""}
+    <div class="pv-title">${esc(p.title)}</div>
+    <div class="pv-meta"><span>🏢 ${esc(p.dept)}</span><span>🕒 ${esc(p.date)}</span></div>
+    ${p.summary ? `<div class="pv-lead">${esc(p.summary)}</div>` : ""}
+    <div class="pv-body">${esc(p.content) || "<i style='color:var(--faint)'>(Chưa có nội dung chi tiết)</i>"}</div>
+  `;
+  // nút publish chỉ hiện khi chưa đăng
+  $("#pv-publish").style.display = p.status === "published" ? "none" : "";
+  $("#pv-overlay").classList.add("show");
+}
+function closePreview() { $("#pv-overlay").classList.remove("show"); previewId = null; }
+$("#pv-x").addEventListener("click", closePreview);
+$("#pv-close").addEventListener("click", closePreview);
+$("#pv-overlay").addEventListener("click", (e) => { if (e.target.id === "pv-overlay") closePreview(); });
+$("#pv-edit").addEventListener("click", () => {
+  const p = posts.find(x => x.id === previewId); closePreview(); if (p) openModal("edit", p);
+});
+$("#pv-publish").addEventListener("click", () => {
+  const p = posts.find(x => x.id === previewId); if (!p) return;
+  p.status = "published"; p.date = nowStr(); closePreview(); render();
+  toast("Đã publish — bài viết đã đăng lên trang");
+});
+
+render();
+</script>
+</body>
+</html>
