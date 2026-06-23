@@ -191,26 +191,17 @@
   .ack-btn.done { color: var(--green); cursor: default; }
   .empty { text-align: center; color: var(--faint); padding: 34px 0; font-size: 14px; }
 
-  /* ---------- Approvals ---------- */
+  /* ---------- Nghỉ phép ---------- */
   .appr { display: flex; align-items: center; gap: 11px; padding: 13px 16px; border-bottom: 1px solid #f5f6f7; }
   .appr:last-of-type { border-bottom: none; }
-  .appr.resolved { opacity: .55; }
   .appr .a-body { flex: 1; min-width: 0; }
   .appr .a-name { font-weight: 700; font-size: 13.5px; display: flex; align-items: center; gap: 6px; }
   .a-type { font-size: 11px; font-weight: 700; }
   .appr .a-detail { font-size: 12.5px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .appr .a-sub { font-size: 11px; color: var(--faint); display: flex; gap: 8px; align-items: center; }
-  .a-amount { font-size: 12px; font-weight: 700; color: var(--green); }
-  .a-actions { display: flex; gap: 6px; flex: none; }
-  .a-btn { width: 30px; height: 30px; border-radius: 8px; border: none; cursor: pointer; display: grid; place-items: center; }
-  .a-ok { background: #E7F5E7; color: var(--green); }
-  .a-ok:hover { background: var(--green); color: #fff; }
-  .a-no { background: #FDECEC; color: var(--red); }
-  .a-no:hover { background: var(--red); color: #fff; }
-  .a-status { height: 22px; display: inline-flex; align-items: center; padding: 0 9px; border-radius: 6px; font-size: 11px; font-weight: 700; }
   .count-badge { min-width: 26px; height: 22px; padding: 0 7px; border-radius: 999px; color: #fff;
     background: var(--red); font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; }
-  .card-foot { text-align: center; padding: 11px; font-size: 12.5px; font-weight: 700; color: var(--tvs-blue); cursor: pointer; }
+  .card-foot { display: block; text-align: center; text-decoration: none; padding: 11px; font-size: 12.5px; font-weight: 700; color: var(--tvs-blue); cursor: pointer; }
   .card-foot:hover { background: #F7FAFD; border-radius: 0 0 var(--radius) var(--radius); }
 
   /* ---------- Recruitment ---------- */
@@ -256,6 +247,67 @@
   .footer-note { max-width: 1400px; margin: 8px auto 30px; padding: 0 22px; color: var(--faint); font-size: 12px; text-align: center; }
   .mock-tag { position: fixed; bottom: 14px; right: 14px; background: #111827; color: #fff; font-size: 11px;
     padding: 6px 12px; border-radius: 999px; opacity: .8; z-index: 60; }
+  .cms-fab { position: fixed; bottom: 50px; right: 14px; z-index: 61; text-decoration: none;
+    background: var(--tvs-blue); color: #fff; font-weight: 700; font-size: 13px; padding: 11px 18px;
+    border-radius: 999px; box-shadow: 0 6px 18px rgba(18,78,145,.35);
+    display: inline-flex; align-items: center; gap: 8px; }
+  .cms-fab:hover { background: var(--tvs-blue-dark); }
+
+  /* ---------- News detail modal ---------- */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 80; display: none;
+    align-items: flex-start; justify-content: center; padding: 40px 16px;
+    background: rgba(13,29,51,.55); backdrop-filter: blur(3px);
+    overflow-y: auto;
+  }
+  .modal-overlay.open { display: flex; animation: fade .18s ease; }
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  .modal {
+    background: #fff; width: 100%; max-width: 680px; border-radius: 18px;
+    box-shadow: 0 24px 60px rgba(11,29,55,.35); overflow: hidden;
+    animation: pop .2s ease; margin: auto 0;
+  }
+  @keyframes pop { from { transform: translateY(14px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  .modal-hero {
+    padding: 22px 26px; color: #fff; position: relative;
+    background: linear-gradient(135deg, var(--tvs-blue-dark) 0%, var(--tvs-blue) 70%, var(--tvs-blue-light) 100%);
+  }
+  .modal-hero .m-chips { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+  .modal-hero .m-chip { height: 22px; display: inline-flex; align-items: center; padding: 0 10px; border-radius: 7px;
+    font-size: 11px; font-weight: 700; background: rgba(255,255,255,.18); color: #fff; }
+  .modal-hero h2 { font-size: 22px; font-weight: 800; line-height: 1.3; padding-right: 28px; }
+  .modal-hero .m-meta { display: flex; align-items: center; gap: 13px; flex-wrap: wrap;
+    margin-top: 12px; font-size: 12.5px; opacity: .9; }
+  .modal-hero .m-meta .auth { font-weight: 700; }
+  .modal-x {
+    position: absolute; top: 16px; right: 16px; width: 34px; height: 34px; border-radius: 50%;
+    border: none; cursor: pointer; background: rgba(255,255,255,.18); color: #fff; font-size: 19px;
+    line-height: 1; display: grid; place-items: center;
+  }
+  .modal-x:hover { background: rgba(255,255,255,.32); }
+  .modal-body { padding: 22px 26px; font-size: 14.5px; line-height: 1.7; color: #374151; }
+  .modal-body p { margin-bottom: 13px; }
+  .modal-body p:last-child { margin-bottom: 0; }
+  .modal-body .lead-summ { font-size: 15px; font-weight: 600; color: var(--ink);
+    border-left: 3px solid var(--tvs-blue); padding-left: 14px; margin-bottom: 16px; }
+  .modal-foot {
+    display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+    padding: 14px 26px; border-top: 1px solid #f1f3f5; background: #fafbfc; flex-wrap: wrap;
+  }
+  .modal-foot .ack-note { margin-right: auto; font-size: 12.5px; color: var(--orange); font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px; }
+  .modal-foot .ack-note.done { color: var(--green); }
+  .btn-primary {
+    background: var(--tvs-blue); color: #fff; border: none; border-radius: 10px; cursor: pointer;
+    font-weight: 700; font-family: inherit; font-size: 13px; padding: 9px 18px;
+  }
+  .btn-primary:hover { background: var(--tvs-blue-dark); }
+  .btn-primary:disabled { background: var(--green); cursor: default; opacity: .9; }
+  .btn-ghost {
+    background: #fff; color: #4B5563; border: 1px solid #D1D5DB; border-radius: 10px; cursor: pointer;
+    font-weight: 700; font-family: inherit; font-size: 13px; padding: 9px 16px;
+  }
+  .btn-ghost:hover { background: #F3F4F6; }
 
   /* ---------- Responsive ---------- */
   @media (max-width: 1024px) {
@@ -271,48 +323,6 @@
 </style>
 </head>
 <body>
-
-  <!-- App top bar (mô phỏng header SMART) -->
-  <div class="appbar">
-    <div class="brand">
-      <div class="logo-badge">TVS</div>
-      <span class="title">Information Hub</span>
-    </div>
-    <div class="right">
-      <a href="cms.html" style="text-decoration:none;background:#EAF1FA;color:#124E91;font-weight:700;font-size:12.5px;padding:9px 14px;border-radius:999px">⚙ Trang quản trị (CMS)</a>
-      <button class="icon-btn" title="Thông báo">🔔<span class="dot"></span></button>
-      <div class="avatar-pill">
-        <div class="avatar">MH</div>
-        <div>
-          <div class="nm">Minh Hoàng</div>
-          <div class="rl">Trưởng phòng</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hub gradient band -->
-  <div class="hub-band">
-    <div class="inner">
-      <div class="lead">
-        <div class="hub-ico">📢</div>
-        <div>
-          <h1>Trung tâm Thông tin Nội bộ</h1>
-          <div class="sub" id="greeting">Chào mừng 👋 · Cập nhật tức thời toàn công ty</div>
-        </div>
-      </div>
-      <div class="hub-tools">
-        <div class="search-box">
-          <span>🔍</span>
-          <input id="search" type="text" placeholder="Tìm thông báo, tin tức..." />
-        </div>
-        <div class="clock">
-          <div class="t" id="clock-time">--:--</div>
-          <div class="d" id="clock-date">&nbsp;</div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <main>
     <div class="urgent-wrap" id="urgent-wrap"></div>
@@ -351,20 +361,20 @@
 
       <!-- Cột phụ -->
       <div class="col">
-        <!-- Pending approvals -->
+        <!-- Nghỉ phép -->
         <div class="card">
           <div class="card-head">
             <div class="ttl">
-              <span class="head-ico" style="background:#E8F0FA;color:var(--tvs-blue)">✅</span>
+              <span class="head-ico" style="background:#E8F0FA;color:var(--tvs-blue)">🌴</span>
               <div>
-                Yêu cầu chờ duyệt
-                <div style="font-size:11px;font-weight:500;color:var(--faint)">Dành cho cấp quản lý</div>
+                Nghỉ phép
+                <div style="font-size:11px;font-weight:500;color:var(--faint)">Đơn nghỉ phép gần đây</div>
               </div>
             </div>
-            <span class="count-badge" id="appr-count">0</span>
+            <span class="count-badge" id="leave-count">0</span>
           </div>
-          <div id="appr-list"></div>
-          <div class="card-foot">Xem tất cả yêu cầu →</div>
+          <div id="leave-list"></div>
+          <a class="card-foot" href="#" rel="noopener">Mở cổng nghỉ phép ↗</a>
         </div>
 
         <!-- Quick links -->
@@ -377,7 +387,13 @@
   </main>
 
   <div class="footer-note">Bản mockup tĩnh · Dữ liệu minh hoạ · TVS SMART — Centralized Information Hub</div>
+  <a href="cms.html" class="cms-fab">⚙ Xem trang CMS</a>
   <div class="mock-tag">● MOCKUP · dummy data</div>
+
+  <!-- News detail popup -->
+  <div class="modal-overlay" id="news-modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title"></div>
+  </div>
 
 <script>
 /* ===================== DỮ LIỆU MẪU ===================== */
@@ -398,35 +414,75 @@ const urgent = [{
 const news = [
   { id:"n1", cat:"company", thumb:"📅", title:"Lịch nghỉ lễ Quốc khánh 02/09/2026",
     summary:"Công ty nghỉ lễ từ 31/08 đến hết 02/09. Bộ phận trực vận hành đăng ký với Trưởng phòng trước 25/08.",
-    author:"Phòng Hành chính - Nhân sự", time:"Hôm nay · 10:20", pinned:true, isNew:true, ack:true, views:482 },
+    author:"Phòng Hành chính - Nhân sự", time:"Hôm nay · 10:20", pinned:true, isNew:true, ack:true, views:482,
+    content:[
+      "Căn cứ quy định của Nhà nước, Công ty thông báo lịch nghỉ lễ Quốc khánh 02/09/2026 như sau: toàn thể CBNV được nghỉ liên tục từ thứ Hai ngày 31/08 đến hết thứ Tư ngày 02/09 và đi làm trở lại vào thứ Năm ngày 03/09.",
+      "Các bộ phận có nhu cầu trực vận hành trong kỳ nghỉ vui lòng đăng ký danh sách với Trưởng phòng và gửi về Phòng HC-NS trước ngày 25/08 để bố trí ca trực và chế độ tương ứng.",
+      "Đề nghị các đơn vị chủ động sắp xếp công việc, hoàn tất các giao dịch và báo cáo cần thiết trước kỳ nghỉ. Chúc toàn thể CBNV kỳ nghỉ lễ vui vẻ và an toàn."
+    ] },
   { id:"n2", cat:"leadership", thumb:"🎯", title:"Thông điệp BLĐ: Văn hóa lấy khách hàng làm trọng tâm",
     summary:"Ban Lãnh đạo chia sẻ định hướng xây dựng văn hóa phục vụ khách hàng và lộ trình triển khai toàn hệ thống.",
-    author:"Ban Lãnh đạo", time:"Hôm nay · 08:00", isNew:true, views:651 },
+    author:"Ban Lãnh đạo", time:"Hôm nay · 08:00", isNew:true, views:651,
+    content:[
+      "Trong giai đoạn cạnh tranh ngày càng gay gắt, Ban Lãnh đạo xác định trải nghiệm khách hàng là yếu tố tạo nên sự khác biệt bền vững của TVS. Mỗi CBNV, ở bất kỳ vị trí nào, đều là một điểm chạm với khách hàng.",
+      "Lộ trình triển khai gồm ba giai đoạn: chuẩn hóa quy trình phục vụ trong Quý III, đào tạo kỹ năng và bộ tiêu chuẩn dịch vụ trong Quý IV, và đo lường mức độ hài lòng khách hàng định kỳ từ đầu năm 2027.",
+      "Ban Lãnh đạo kêu gọi toàn thể CBNV cùng chung tay biến cam kết phục vụ khách hàng thành hành động cụ thể trong công việc hằng ngày."
+    ] },
   { id:"n3", cat:"company", thumb:"🧾", title:"Triển khai quy trình phê duyệt chi phí mới trên SMART",
     summary:"Từ 01/07, toàn bộ đề nghị thanh toán & công tác phí chuyển sang phê duyệt điện tử. Xem hướng dẫn đính kèm.",
-    author:"Phòng Tài chính - Kế toán", time:"Hôm qua · 16:45", ack:true, views:327 },
+    author:"Phòng Tài chính - Kế toán", time:"Hôm qua · 16:45", ack:true, views:327,
+    content:[
+      "Nhằm rút ngắn thời gian xử lý và tăng tính minh bạch, từ ngày 01/07/2026 toàn bộ đề nghị thanh toán, tạm ứng và công tác phí sẽ được thực hiện hoàn toàn trên hệ thống SMART, thay cho biểu mẫu giấy.",
+      "Người đề nghị tạo phiếu trực tiếp trên SMART, đính kèm chứng từ và gửi cấp quản lý phê duyệt điện tử theo phân quyền. Phòng TC-KT chỉ tiếp nhận hồ sơ đã được duyệt trên hệ thống.",
+      "Tài liệu hướng dẫn chi tiết và video thao tác đã được đăng tại Kho tài liệu nội bộ. Mọi vướng mắc vui lòng liên hệ Phòng TC-KT để được hỗ trợ."
+    ] },
   { id:"n4", cat:"market", thumb:"📈", title:"Bản tin sáng: VN-Index tiếp đà hồi phục",
     summary:"Khối ngoại mua ròng phiên thứ 3 liên tiếp, dòng tiền tập trung nhóm ngân hàng và chứng khoán.",
-    author:"Khối Phân tích (Research)", time:"Hôm nay · 07:45", isNew:true, views:540 },
+    author:"Khối Phân tích (Research)", time:"Hôm nay · 07:45", isNew:true, views:540,
+    content:[
+      "Thị trường mở cửa tích cực khi VN-Index nối dài đà hồi phục với thanh khoản cải thiện rõ rệt. Khối ngoại tiếp tục mua ròng phiên thứ ba liên tiếp, tập trung vào nhóm ngân hàng và chứng khoán.",
+      "Nhóm cổ phiếu vốn hóa lớn đóng vai trò dẫn dắt, trong khi dòng tiền có dấu hiệu lan tỏa sang nhóm bất động sản khu công nghiệp. Áp lực bán chốt lời vẫn xuất hiện cục bộ nhưng chưa đủ tạo rủi ro đảo chiều.",
+      "Khối Phân tích khuyến nghị nhà đầu tư duy trì tỷ trọng hợp lý, ưu tiên các mã có nền tảng cơ bản tốt và tránh mua đuổi ở vùng giá cao. Chi tiết khuyến nghị xem tại báo cáo đính kèm."
+    ] },
   { id:"n5", cat:"market", thumb:"🏦", title:"Báo cáo cập nhật ngành Ngân hàng — nửa cuối 2026",
     summary:"Khối Phân tích phát hành báo cáo cập nhật ngành ngân hàng kèm khuyến nghị danh mục theo dõi.",
-    author:"Khối Phân tích (Research)", time:"Hôm qua · 14:10", views:289 },
+    author:"Khối Phân tích (Research)", time:"Hôm qua · 14:10", views:289,
+    content:[
+      "Khối Phân tích vừa phát hành báo cáo cập nhật triển vọng ngành ngân hàng cho nửa cuối năm 2026, với đánh giá tích cực dựa trên tăng trưởng tín dụng phục hồi và biên lãi ròng (NIM) dần ổn định.",
+      "Báo cáo nhận định chất lượng tài sản tiếp tục được kiểm soát, tỷ lệ nợ xấu có xu hướng đi ngang. Một số ngân hàng có câu chuyện tăng vốn và bán vốn cho đối tác chiến lược được đánh giá là điểm nhấn đầu tư.",
+      "Toàn văn báo cáo cùng danh mục cổ phiếu theo dõi đã được đăng tải trên Research Center dành cho CBNV và khách hàng ưu tiên."
+    ] },
   { id:"n6", cat:"recruitment", thumb:"👋", title:"Chào mừng 8 đồng nghiệp mới gia nhập TVS tháng 6",
     summary:"TVS chào đón thành viên mới ở Khối Công nghệ, Môi giới và Vận hành. Hãy gửi lời chào tới các bạn!",
-    author:"Phòng Hành chính - Nhân sự", time:"2 ngày trước", views:712 },
+    author:"Phòng Hành chính - Nhân sự", time:"2 ngày trước", views:712,
+    content:[
+      "Tháng 6 này, TVS hân hạnh chào đón 8 đồng nghiệp mới gia nhập đại gia đình, trải đều ở Khối Công nghệ, Khối Môi giới và Khối Vận hành.",
+      "Các thành viên mới sẽ tham gia chương trình hội nhập trong hai tuần đầu, bao gồm giới thiệu về văn hóa, sản phẩm và hệ thống SMART. Mỗi bạn cũng được phân công một người đỡ đầu (buddy) để hỗ trợ trong giai đoạn đầu.",
+      "Rất mong toàn thể CBNV dành lời chào thân thiện và hỗ trợ các đồng nghiệp mới nhanh chóng hòa nhập với môi trường làm việc tại TVS."
+    ] },
   { id:"n7", cat:"company", thumb:"📝", title:"Khảo sát mức độ hài lòng nội bộ Quý II",
     summary:"Mời CBNV dành 5 phút thực hiện khảo sát ẩn danh để giúp công ty cải thiện môi trường làm việc. Hạn: 30/06.",
-    author:"Phòng Hành chính - Nhân sự", time:"2 ngày trước", views:198 },
+    author:"Phòng Hành chính - Nhân sự", time:"2 ngày trước", views:198,
+    content:[
+      "Phòng HC-NS triển khai khảo sát mức độ hài lòng nội bộ Quý II/2026 nhằm lắng nghe ý kiến CBNV về môi trường làm việc, chính sách phúc lợi và hoạt động phối hợp giữa các đơn vị.",
+      "Khảo sát được thực hiện hoàn toàn ẩn danh và chỉ mất khoảng 5 phút. Kết quả tổng hợp sẽ là cơ sở quan trọng để Công ty điều chỉnh và cải thiện trong nửa cuối năm.",
+      "Đường dẫn khảo sát đã được gửi qua email công việc. Thời hạn thực hiện đến hết ngày 30/06. Rất mong nhận được sự tham gia đầy đủ của toàn thể CBNV."
+    ] },
   { id:"n8", cat:"leadership", thumb:"🎙️", title:"Tóm tắt Town Hall tháng 6: Kết quả & kế hoạch",
     summary:"Xem lại nội dung và video buổi gặp mặt toàn công ty: kết quả 6 tháng và định hướng sắp tới.",
-    author:"Ban Lãnh đạo", time:"3 ngày trước", views:603 },
+    author:"Ban Lãnh đạo", time:"3 ngày trước", views:603,
+    content:[
+      "Buổi Town Hall tháng 6 đã diễn ra thành công với sự tham gia của Ban Lãnh đạo và đông đảo CBNV trên toàn hệ thống. Đây là dịp nhìn lại kết quả 6 tháng đầu năm và chia sẻ định hướng cho giai đoạn tiếp theo.",
+      "Ban Lãnh đạo ghi nhận kết quả kinh doanh vượt 112% kế hoạch nửa đầu năm, đồng thời thẳng thắn trao đổi về các thách thức và trả lời trực tiếp câu hỏi từ CBNV.",
+      "Bản ghi hình đầy đủ và tài liệu trình bày đã được đăng tải trên Kho tài liệu nội bộ. CBNV chưa tham dự được vui lòng xem lại để nắm bắt thông tin."
+    ] },
 ];
 
-const approvals = [
-  { id:"a1", type:"leave",    icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép",   av:"TB", name:"Trần Thị B",  dept:"Khối Môi giới",  sub:"1 giờ trước",      detail:"Nghỉ phép 3 ngày (24–26/06)" },
-  { id:"a2", type:"expense",  icon:"💳", tcolor:"#0C7B09", tlabel:"Công tác phí", av:"LC", name:"Lê Văn C",    dept:"Khối Phân tích", sub:"3 giờ trước",      detail:"Công tác phí — họp đối tác Hà Nội", amount:"4.500.000 đ" },
-  { id:"a3", type:"purchase", icon:"🛒", tcolor:"#EA8C00", tlabel:"Mua sắm",      av:"PD", name:"Phạm Thị D",  dept:"Phòng IT",       sub:"Hôm qua · 17:20", detail:"Đề nghị mua 2 màn hình Dell 27\"", amount:"12.800.000 đ" },
-  { id:"a4", type:"leave",    icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép",   av:"HE", name:"Hoàng Văn E", dept:"Khối Vận hành",  sub:"Hôm qua · 09:05", detail:"Nghỉ phép 1 ngày (27/06)" },
+const leaves = [
+  { id:"a1", icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép", av:"TB", name:"Trần Thị B",  dept:"Khối Môi giới",  sub:"1 giờ trước",      detail:"Nghỉ phép 3 ngày (24–26/06)" },
+  { id:"a2", icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép", av:"LC", name:"Lê Văn C",    dept:"Khối Phân tích", sub:"3 giờ trước",      detail:"Nghỉ phép 2 ngày (25–26/06)" },
+  { id:"a3", icon:"🤒", tcolor:"#EA8C00", tlabel:"Nghỉ ốm",   av:"PD", name:"Phạm Thị D",  dept:"Phòng IT",       sub:"Hôm qua · 17:20", detail:"Nghỉ ốm 1 ngày (23/06)" },
+  { id:"a4", icon:"🌴", tcolor:"#124E91", tlabel:"Nghỉ phép", av:"HE", name:"Hoàng Văn E", dept:"Khối Vận hành",  sub:"Hôm qua · 09:05", detail:"Nghỉ phép 1 ngày (27/06)" },
 ];
 
 const links = [
@@ -439,18 +495,6 @@ const links = [
 /* ===================== TIỆN ÍCH ===================== */
 const $ = (s) => document.querySelector(s);
 const esc = (s) => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-
-/* ---- Đồng hồ + lời chào ---- */
-const WD = ["Chủ nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
-function tick() {
-  const n = new Date();
-  $("#clock-time").textContent = n.toLocaleTimeString("vi-VN", {hour:"2-digit", minute:"2-digit"});
-  $("#clock-date").textContent = `${WD[n.getDay()]}, ${n.getDate()}/${n.getMonth()+1}/${n.getFullYear()}`;
-  const h = n.getHours();
-  const g = h < 11 ? "Chào buổi sáng" : h < 14 ? "Chào buổi trưa" : h < 18 ? "Chào buổi chiều" : "Chào buổi tối";
-  $("#greeting").textContent = `${g} 👋 · Cập nhật tức thời toàn công ty`;
-}
-tick(); setInterval(tick, 1000 * 20);
 
 /* ---- Urgent banner ---- */
 function renderUrgent() {
@@ -490,7 +534,7 @@ function renderNews() {
   $("#news-list").innerHTML = list.map(n => {
     const c = CAT[n.cat];
     return `
-    <div class="news">
+    <div class="news" onclick="openNews('${n.id}')">
       <div class="thumb" style="background:${c.bg}">${n.thumb}</div>
       <div class="body">
         <div class="chips">
@@ -505,54 +549,91 @@ function renderNews() {
           <span class="auth">${esc(n.author)}</span>
           <span>· ${esc(n.time)}</span>
           <span>👁 ${n.views}</span>
-          ${n.ack ? `<button class="ack-btn" onclick="ackRead(this)">✓ Xác nhận đã đọc</button>` : ""}
+          ${n.ack ? `<button class="ack-btn ${n.acked?'done':''}" onclick="event.stopPropagation();ackNews('${n.id}')">${n.acked?'✓ Đã xác nhận':'✓ Xác nhận đã đọc'}</button>` : ""}
         </div>
       </div>
     </div>`;
   }).join("");
 }
-function ackRead(btn) {
-  btn.classList.add("done");
-  btn.textContent = "✓ Đã xác nhận";
-  btn.onclick = null;
+function ackNews(id) {
+  const n = news.find(x => x.id === id);
+  if (!n || n.acked) return;
+  n.acked = true;
+  renderNews();
+  if (openId === id) renderModal(n);   // giữ đồng bộ nếu popup đang mở
 }
-$("#search").addEventListener("input", e => { query = e.target.value; renderNews(); });
 renderTabs(); renderNews();
 
-/* ---- Approvals ---- */
-function renderAppr() {
-  $("#appr-list").innerHTML = approvals.map(a => `
+/* ---- News detail popup ---- */
+let openId = null;
+const modalEl = $("#news-modal");
+
+function renderModal(n) {
+  const c = CAT[n.cat];
+  const bodyHtml = (n.content && n.content.length)
+    ? n.content.map(p => `<p>${esc(p)}</p>`).join("")
+    : `<p>${esc(n.summary)}</p>`;
+  modalEl.querySelector(".modal").innerHTML = `
+    <div class="modal-hero">
+      <button class="modal-x" title="Đóng" onclick="closeNews()">×</button>
+      <div class="m-chips">
+        <span class="m-chip" style="background:rgba(255,255,255,.22)">${esc(c.label)}</span>
+        ${n.pinned ? `<span class="m-chip">📌 Ghim</span>` : ""}
+        ${n.isNew ? `<span class="m-chip">MỚI</span>` : ""}
+        ${n.ack ? `<span class="m-chip">Cần xác nhận đọc</span>` : ""}
+      </div>
+      <h2 id="m-title">${esc(n.title)}</h2>
+      <div class="m-meta">
+        <span class="auth">${esc(n.author)}</span>
+        <span>· ${esc(n.time)}</span>
+        <span>👁 ${n.views} lượt xem</span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="lead-summ">${esc(n.summary)}</div>
+      ${bodyHtml}
+    </div>
+    <div class="modal-foot">
+      ${n.ack ? `<span class="ack-note ${n.acked?'done':''}">${n.acked?'✓ Bạn đã xác nhận đọc tin này':'⚠ Tin này cần xác nhận đã đọc'}</span>` : ""}
+      ${n.ack
+        ? `<button class="btn-primary" ${n.acked?'disabled':''} onclick="ackNews('${n.id}')">${n.acked?'✓ Đã xác nhận':'Xác nhận đã đọc'}</button>`
+        : ""}
+      <button class="btn-ghost" onclick="closeNews()">Đóng</button>
+    </div>`;
+}
+function openNews(id) {
+  const n = news.find(x => x.id === id);
+  if (!n) return;
+  openId = id;
+  renderModal(n);
+  modalEl.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+function closeNews() {
+  openId = null;
+  modalEl.classList.remove("open");
+  document.body.style.overflow = "";
+}
+modalEl.addEventListener("click", e => { if (e.target === modalEl) closeNews(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && openId) closeNews(); });
+
+/* ---- Nghỉ phép ---- */
+function renderLeave() {
+  $("#leave-list").innerHTML = leaves.map(a => `
     <div class="appr" data-id="${a.id}">
       <div class="avatar">${a.av}</div>
       <div class="a-body">
         <div class="a-name">${esc(a.name)} <span style="font-size:12px">${a.icon}</span>
           <span class="a-type" style="color:${a.tcolor}">${a.tlabel}</span></div>
         <div class="a-detail">${esc(a.detail)}</div>
-        <div class="a-sub"><span>${esc(a.dept)} · ${esc(a.sub)}</span>${a.amount?`<span class="a-amount">${esc(a.amount)}</span>`:""}</div>
-      </div>
-      <div class="a-actions">
-        <button class="a-btn a-ok" title="Duyệt" onclick="resolveAppr('${a.id}','ok')">✓</button>
-        <button class="a-btn a-no" title="Từ chối" onclick="resolveAppr('${a.id}','no')">×</button>
+        <div class="a-sub"><span>${esc(a.dept)} · ${esc(a.sub)}</span></div>
       </div>
     </div>`).join("");
-  updateApprCount();
+  const badge = $("#leave-count");
+  badge.textContent = leaves.length;
+  badge.style.background = "var(--tvs-blue)";
 }
-function resolveAppr(id, kind) {
-  const row = document.querySelector(`.appr[data-id="${id}"]`);
-  if (!row) return;
-  row.classList.add("resolved");
-  const ok = kind === "ok";
-  row.querySelector(".a-actions").outerHTML =
-    `<span class="a-status" style="color:${ok?'var(--green)':'var(--red)'};background:${ok?'#E7F5E7':'#FDECEC'}">${ok?'Đã duyệt':'Từ chối'}</span>`;
-  updateApprCount();
-}
-function updateApprCount() {
-  const n = document.querySelectorAll(".appr:not(.resolved)").length;
-  const badge = $("#appr-count");
-  badge.textContent = n;
-  badge.style.background = n > 0 ? "var(--red)" : "#9CA3AF";
-}
-renderAppr();
+renderLeave();
 
 /* ---- Quick links ---- */
 $("#links").innerHTML = links.map(l => `

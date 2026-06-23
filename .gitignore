@@ -1,5 +1,6 @@
-# Claude Code session data — không publish
+# Claude Code session data & cấu hình — không publish
 .clsessions/
+.claude/
 
 # macOS
 .DS_Store

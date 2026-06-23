@@ -131,6 +131,11 @@
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
   .mock-tag { position: fixed; bottom: 14px; right: 14px; background: #111827; color: #fff; font-size: 11px;
     padding: 6px 12px; border-radius: 999px; opacity: .8; z-index: 60; }
+  .hub-fab { position: fixed; bottom: 50px; right: 14px; z-index: 61; text-decoration: none;
+    background: var(--tvs-blue); color: #fff; font-weight: 700; font-size: 13px; padding: 11px 18px;
+    border-radius: 999px; box-shadow: 0 6px 18px rgba(18,78,145,.35);
+    display: inline-flex; align-items: center; gap: 8px; }
+  .hub-fab:hover { background: var(--tvs-blue-dark); }
 
   @media (max-width: 720px) {
     .hide-sm { display: none; }
@@ -140,17 +145,6 @@
 </style>
 </head>
 <body>
-
-  <div class="appbar">
-    <div class="brand">
-      <div class="logo-badge">TVS</div>
-      <div class="title">CMS Quản trị nội dung<small>Trung tâm Thông tin Nội bộ</small></div>
-    </div>
-    <div class="right">
-      <a href="index.html" class="link-pill">← Xem trang Hub</a>
-      <div class="avatar">QT</div>
-    </div>
-  </div>
 
   <main>
     <div class="page-head">
@@ -290,6 +284,7 @@
   </div>
 
   <div class="toast" id="toast"></div>
+  <a href="index.html" class="hub-fab">← Xem trang Hub</a>
   <div class="mock-tag">● MOCKUP CMS · dummy data</div>
 
 <script>
